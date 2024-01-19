@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { Providers } from "./providers";
 import './globals.css';
+import { Providers } from "./providers";
+import Navbar from '@/components/navbar';
 
 export const metadata: Metadata = {
 	title: 'beacon host',
@@ -9,9 +10,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className='dark'>
+		<html lang="en" suppressHydrationWarning>
 			<body>
 				<Providers>
+					<Navbar/>
 					{children}
 				</Providers>
 			</body>

@@ -6,7 +6,7 @@ export default function Page() {
       <Button size="sm" isLoading>
         Small
       </Button>
-      <Button size="md">
+      <Button size="md" color='primary' variant='shadow'>
         Medium
       </Button>
       <Button size="lg">
