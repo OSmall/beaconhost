@@ -1,7 +1,17 @@
-export default function Home() {
+import { Button } from '@nextui-org/button';
+
+export default function Page() {
   return (
-    <main>
-      <h1>Hello world!</h1>
-    </main>
-  )
+    <div className="flex gap-4 items-center">
+      <Button size="sm" isLoading>
+        Small
+      </Button>
+      <Button size="md">
+        Medium
+      </Button>
+      <Button size="lg">
+        Large
+      </Button>
+    </div>
+  );
 }
