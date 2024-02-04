@@ -10,7 +10,7 @@ export function Providers({
 }) {
   return (
     <NextUIProvider>
-      <NextThemesProvider attribute='class' defaultTheme='light'>
+      <NextThemesProvider attribute='class'>
         {children}
       </NextThemesProvider>
     </NextUIProvider>
