@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
-import { Config } from "sst/node/config"
+import env from "@/lib/env";
 
 export const {
 	handlers: { GET, POST },
@@ -10,10 +10,10 @@ export const {
 } = NextAuth({
 	providers: [
 		GitHub({
-			clientId: Config.GITHUB_ID,
-			clientSecret: Config.GITHUB_SECRET,
+			clientId: env.GITHUB_ID,
+			clientSecret: env.GITHUB_SECRET,
 		}),
 	],
 	trustHost: true,
-	secret: Config.AUTH_SECRET,
+	secret: env.AUTH_SECRET,	
 });

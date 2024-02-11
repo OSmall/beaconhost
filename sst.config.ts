@@ -1,5 +1,6 @@
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
+import env from "./lib/env";
 
 export default {
   config(_input) {
@@ -25,11 +26,14 @@ export default {
 
       const site = new NextjsSite(stack, "beaconhost", {
         bind: [
-          userTable,
           AUTH_SECRET,
           GITHUB_ID,
           GITHUB_SECRET,
-        ]
+          userTable,
+        ],
+        environment: {
+          AUTH_URL: { dev: undefined, prod: process.env.PROD_AUTH_URL }[app.stage] as string,
+        }
       });
 
       stack.addOutputs({
