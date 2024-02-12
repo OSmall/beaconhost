@@ -1,6 +1,5 @@
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
-import env from "./lib/env";
 
 export default {
   config(_input) {
@@ -10,18 +9,33 @@ export default {
     };
   },
   stacks(app) {
+    if (app.stage === "dev") {
+      app.setDefaultRemovalPolicy("destroy");
+    }
     app.stack(function Site({ stack }) {
       const AUTH_SECRET = new Config.Secret(stack, "AUTH_SECRET");
       const GITHUB_ID = new Config.Secret(stack, "GITHUB_ID");
       const GITHUB_SECRET = new Config.Secret(stack, "GITHUB_SECRET");
 
 
-      const userTable = new Table(stack, "user", {
+      const authTable = new Table(stack, "next-auth", {
         fields: {
-          id: "string",
-          email: "string",
+          pk: "string",
+          sk: "string",
+          GSI1PK: "string",
+          GSI1SK: "string",
         },
-        primaryIndex: { partitionKey: "id" },
+        primaryIndex: {
+          partitionKey: "pk",
+          sortKey: "sk",
+        },
+        timeToLiveAttribute: "expires",
+        globalIndexes: {
+          GSI1: {
+            partitionKey: "GSI1PK",
+            sortKey: "GSI1SK",
+          }
+        }
       });
 
       const site = new NextjsSite(stack, "beaconhost", {
@@ -29,10 +43,10 @@ export default {
           AUTH_SECRET,
           GITHUB_ID,
           GITHUB_SECRET,
-          userTable,
+          authTable,
         ],
         environment: {
-          AUTH_URL: { dev: undefined, prod: process.env.PROD_AUTH_URL }[app.stage] as string,
+          AUTH_URL: { dev: "", prod: process.env.PROD_AUTH_URL ?? "" }[app.stage] as string,
         }
       });
 
