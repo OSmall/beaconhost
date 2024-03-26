@@ -1,13 +1,18 @@
+import { auth } from "@/lib/auth";
 import {
   Navbar as NextUINavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/navbar";
-import { Button } from "@nextui-org/react";
 import Link from "next/link";
+import AvatarDropdown from "./avatarDropdown";
+import { SignIn } from "./auth";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
+  const user = session?.user;
+
   return (
     <NextUINavbar>
       <NavbarBrand>
@@ -31,14 +36,14 @@ export default function Navbar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {
+          user ?
+            <AvatarDropdown user={user} />
+            :
+            <NavbarItem className="hidden lg:flex">
+              <SignIn />
+            </NavbarItem>
+        }
       </NavbarContent>
     </NextUINavbar>
   )

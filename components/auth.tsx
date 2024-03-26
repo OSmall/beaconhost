@@ -1,30 +1,22 @@
-import { signIn, signOut } from "@/lib/auth";
+import { signInAction, signOutAction } from "@/lib/actions";
 import { Button } from "@nextui-org/react";
 
-export function SignIn({ children }: { children?: React.ReactNode }): React.ReactNode {
+export function SignIn(): React.ReactNode {
   return (
     <div>
-      <form action={async () => {
-        "use server";
-        await signIn();
-      }}>
+      <form action={signInAction}>
         <Button type='submit'>Sign In</Button>
       </form>
-      {children}
     </div>
-  )
+  );
 }
 
-export function SignOut({ children }: { children?: React.ReactNode }): React.ReactNode {
+export function SignOut(): React.ReactNode {
   return (
     <div>
-      <form action={async () => {
-        "use server";
-        await signOut();
-      }}>
+      <form action={signOutAction}>
         <Button type='submit'>Sign Out</Button>
       </form>
-      {children}
     </div>
-  )
+  );
 }
