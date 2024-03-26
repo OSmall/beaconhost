@@ -4,7 +4,7 @@ import { Config, NextjsSite, Table } from "sst/constructs";
 export default {
   config(_input) {
     return {
-      name: "beacon-host-website",
+      name: "beaconhost-website",
       region: "ap-southeast-2",
     };
   },

@@ -8,7 +8,7 @@ const sstEnvSchema = z.object({
 	GITHUB_ID: z.string(),
 	GITHUB_SECRET: z.string(),
 	STAGE: z.enum(stages),
-	APP: z.literal('beacon-host-website'),
+	APP: z.literal('beaconhost-website'),
 });
 const sstEnv = sstEnvSchema.parse({ ...Config }); // zod or sst (idk which) doesn't like parsing `Config` as is. It is a proxy objext so shallow cloning works fine here
 
