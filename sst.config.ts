@@ -1,5 +1,6 @@
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
+import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 
 export default {
   config(_input) {
@@ -47,7 +48,7 @@ export default {
         ],
         environment: {
           AUTH_URL: { dev: "", prod: process.env.PROD_AUTH_URL ?? "" }[app.stage] as string,
-        }
+        },
       });
 
       stack.addOutputs({
