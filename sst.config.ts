@@ -1,6 +1,5 @@
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
-import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 
 export default {
   config(_input) {

@@ -13,12 +13,15 @@
     "@aws-sdk/client-dynamodb": "^3.506.0",
     "@aws-sdk/lib-dynamodb": "^3.506.0",
     "@nextui-org/react": "^2.2.9",
+    "@typedorm/common": "^1.15.4",
+    "@typedorm/core": "^1.15.4",
     "framer-motion": "^11.0.22",
     "next": "^14.0.4",
-    "next-auth": "5.0.0-beta.16",
+    "next-auth": "5.0.0-beta.18",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "reflect-metadata": "^0.2.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
