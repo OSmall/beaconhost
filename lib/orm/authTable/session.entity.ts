@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Attribute, Entity, INDEX_TYPE } from "@typedorm/common";
 
 @Entity({
@@ -15,18 +14,18 @@ import { Attribute, Entity, INDEX_TYPE } from "@typedorm/common";
 		},
 	},
 })
-export class User {
-	@Attribute({
-		unique: true
-	})
-	sessionToken!: string;
-
+export default class Session {
 	@Attribute()
-	expires!: number;
+	sessionToken!: string;
 
 	@Attribute()
 	userId!: string;
 
 	@Attribute()
+	expires!: number;
+
+	@Attribute({
+		hidden: true,
+	})
 	type!: "SESSION";
 }

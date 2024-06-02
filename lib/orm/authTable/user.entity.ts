@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Attribute, Entity, INDEX_TYPE } from "@typedorm/common";
 
 @Entity({
@@ -15,13 +14,11 @@ import { Attribute, Entity, INDEX_TYPE } from "@typedorm/common";
 		},
 	},
 })
-export class User {
+export default class User {
 	@Attribute()
 	id!: string;
 
-	@Attribute({
-		unique: true,
-	})
+	@Attribute()
 	email!: string;
 
 	@Attribute()
@@ -33,6 +30,8 @@ export class User {
 	@Attribute()
 	name!: string;
 
-	@Attribute()
+	@Attribute({
+		hidden: true,
+	})
 	type!: "USER";
 }

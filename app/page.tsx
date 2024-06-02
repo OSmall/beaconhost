@@ -1,3 +1,4 @@
+import { testORM } from '@/lib/actions';
 import { Button } from '@nextui-org/button';
 import React from 'react';
 
@@ -15,6 +16,11 @@ export default async function Page() {
         Large
       </Button>
       <br />
+
+      <form action={testORM}>
+        <Button type='submit'>Test ORM</Button>
+      </form>
+
     </div>
   );
 }
