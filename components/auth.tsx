@@ -1,5 +1,5 @@
 import { signInAction, signOutAction } from "@/lib/actions";
-import { Button } from "@nextui-org/react";
+import { Button } from "@/components/ui/button";
 
 export function SignIn(): React.ReactNode {
   return (

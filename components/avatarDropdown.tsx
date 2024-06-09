@@ -1,9 +1,13 @@
 "use client";
 
-import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@nextui-org/react";
 import { signOutAction } from "@/lib/actions";
 import { User } from "next-auth";
 import { createHash } from "crypto";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
+import { SignOut } from "./auth";
+import Link from "next/link";
 
 export default function AvatarDropdown({ user }: { user: User }) {
 
@@ -13,28 +17,35 @@ export default function AvatarDropdown({ user }: { user: User }) {
 		return `https://www.gravatar.com/avatar/${hash.digest('hex')}?size=512`;
 	}
 
-	return <Dropdown showArrow>
-		<DropdownTrigger>
-			<Avatar
-				src={generateGravatarUrl(user.email ?? "")}
-				as='button'
-			/>
-		</DropdownTrigger>
-		<DropdownMenu onAction={(key) => key === 'signout' && signOutAction()}>
-			<DropdownSection showDivider title={user.email ?? undefined}>
-				<DropdownItem key="profile" className="h-14 gap-2">
-					<p className="font-semibold">Signed in as</p>
-					<p className="font-semibold">{user.email}</p>
-				</DropdownItem>
-				<DropdownItem key="settings">
+	return <DropdownMenu>
+		<DropdownMenuTrigger asChild>
+			<Button variant="secondary" size="icon" className="rounded-full">
+				<Avatar>
+					<AvatarImage src={generateGravatarUrl(user.email ?? "")} alt={user.email ?? undefined} />
+					<AvatarFallback>IMG</AvatarFallback>
+				</Avatar>
+				<span className="sr-only">Toggle user menu</span>
+			</Button>
+		</DropdownMenuTrigger>
+		<DropdownMenuContent  align="end">
+			<DropdownMenuGroup>
+				<DropdownMenuLabel className="font-semibold">
+					Signed in as {user.email}
+				</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem>
 					My Settings
-				</DropdownItem>
-			</DropdownSection>
-			<DropdownSection aria-label="sign out section">
-				<DropdownItem key="signout" color="danger">
-					Sign Out
-				</DropdownItem>
-			</DropdownSection>
-		</DropdownMenu>
-	</Dropdown>
+				</DropdownMenuItem>
+			</DropdownMenuGroup>
+			<DropdownMenuGroup aria-label="sign out section">
+				<form action={signOutAction}>
+					<DropdownMenuItem>
+						<button className="flex h-full w-full" type="submit">
+							Sign Out
+						</button>
+					</DropdownMenuItem>
+				</form>
+			</DropdownMenuGroup>
+		</DropdownMenuContent>
+	</DropdownMenu>
 }

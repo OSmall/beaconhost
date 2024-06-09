@@ -14,7 +14,7 @@ export async function signOutAction() {
 }
 
 export async function testORM() {
-	const user = await authConnection.entityManager.findOne(User, { id: "6d7b595a-c24a-47b8-84c9-c4e60a60ad3c" })
+	const user = await authConnection.entityManager.findOne(User, { id: "6ffc5dd2-2717-4e18-80f2-00a0ae0f742d" })
 	console.log(user);
 	console.log(user instanceof User);
 
