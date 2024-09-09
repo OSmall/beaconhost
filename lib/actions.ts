@@ -14,9 +14,9 @@ export async function signOutAction() {
 }
 
 export async function testORM() {
-	const user = await authConnection.entityManager.findOne(User, { id: "6ffc5dd2-2717-4e18-80f2-00a0ae0f742d" })
-	console.log(user);
-	console.log(user instanceof User);
+	// const user = await authConnection.entityManager.findOne(User, { id: "6ffc5dd2-2717-4e18-80f2-00a0ae0f742d" })
+	// console.log(user);
+	// console.log(user instanceof User);
 
 	const users = (await authConnection.entityManager.find(Account, { provider: 'github' }, { queryIndex: "GSI1" })).items
 	console.log(users);
