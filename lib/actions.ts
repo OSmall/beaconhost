@@ -1,9 +1,7 @@
 "use server";
 
-import { signIn, signOut } from "@/lib/auth";
-import { authConnection } from '@/lib/orm/authTable/auth.table';
-import User from '@/lib/orm/authTable/user.entity';
-import Account from '@/lib/orm/authTable/account.entity';
+import { auth, signIn, signOut } from "@/lib/auth";
+import { Account, Session, User } from "./orm/authTable";
 
 export async function signInAction() {
 	await signIn();
@@ -14,11 +12,31 @@ export async function signOutAction() {
 }
 
 export async function testORM() {
-	// const user = await authConnection.entityManager.findOne(User, { id: "6ffc5dd2-2717-4e18-80f2-00a0ae0f742d" })
-	// console.log(user);
-	// console.log(user instanceof User);
+	const user = (await auth())?.user;
+	let query;
+	query = await Session.query
+		.byUser({
+			userId: user?.id || "",
+			// sessionToken: "8afef681-605a-430a-a754-7a4c52332e61"
+		})
+		.go({ ignoreOwnership: true });
 
-	const users = (await authConnection.entityManager.find(Account, { provider: 'github' }, { queryIndex: "GSI1" })).items
-	console.log(users);
-	console.log(users[0] instanceof Account);
+	console.log(query);
+
+	query = await User.query
+		// .byId({ id: user?.id || "" })
+		.byEmail({ email: user?.email || "" })
+		.go({ ignoreOwnership: true });
+
+	console.log(query);
+
+	query = await Account.query
+		.byUser({
+			userId: user?.id || "",
+			provider: "github",
+		})
+		// .byProvider({ provider: "github", providerAccountId: "20054845" })
+		.go({ ignoreOwnership: true });
+
+	console.log(query);
 }
