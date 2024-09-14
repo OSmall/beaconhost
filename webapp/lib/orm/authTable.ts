@@ -2,7 +2,7 @@ import env from "@/lib/env";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { Entity } from "electrodb";
 
-const table = `${env.STAGE}-${env.APP}-next-auth`;
+const table = `${env.STAGE}-webapp-authjs`;
 export const client = new DynamoDBClient({});
 
 export const Session = new Entity({

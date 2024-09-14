@@ -6,7 +6,7 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 
 const dbClient = DynamoDBAdapter(DynamoDBDocument.from(new DynamoDB({})), {
-	tableName: `${env.STAGE}-${env.APP}-next-auth`
+	tableName: `${env.STAGE}-webapp-authjs`
 });
 
 export const {
