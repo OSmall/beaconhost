@@ -6,8 +6,6 @@ import { createHash } from "crypto";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { SignOut } from "./auth";
-import Link from "next/link";
 
 export default function AvatarDropdown({ user }: { user: User }) {
 
