@@ -96,7 +96,7 @@ data "vercel_project" "beaconhost_webapp" {
 resource "vercel_project_environment_variable" "stage" {
   project_id = data.vercel_project.beaconhost_webapp.id
   key        = "STAGE"
-  value      = "dev"
+  value      = var.environment
   target     = var.environment == "prod" ? ["production"] : ["preview"]
 }
 
