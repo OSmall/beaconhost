@@ -1,7 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { Entity, Schema } from "electrodb";
+import { randomUUID } from "crypto";
+import { Entity, EntityItem } from "electrodb";
 import { Adapter, AdapterAccount, AdapterSession, AdapterUser } from "next-auth/adapters";
-import { randomUUID } from "node:crypto";
 
 const service: string = "beaconhost";
 
@@ -15,6 +15,7 @@ export function createElectroDbEntities(client: DynamoDBClient, table: string) {
 		attributes: {
 			id: {
 				type: "string",
+				required: true,
 				readOnly: true,
 				default: () => randomUUID(),
 			},
@@ -23,8 +24,7 @@ export function createElectroDbEntities(client: DynamoDBClient, table: string) {
 				required: true,
 			},
 			emailVerified: {
-				type: "boolean",
-				default: false,
+				type: "string",
 			},
 			image: {
 				type: "string",
@@ -68,11 +68,13 @@ export function createElectroDbEntities(client: DynamoDBClient, table: string) {
 		attributes: {
 			id: {
 				type: "string",
+				required: true,
 				readOnly: true,
 				default: () => randomUUID(),
 			},
 			userId: {
 				type: "string",
+				required: true,
 				readOnly: true,
 			},
 			provider: {
@@ -167,10 +169,60 @@ export function createElectroDbEntities(client: DynamoDBClient, table: string) {
 			}
 		},
 	}, { table, client });
-	return { user, account, session }
+
+	const verificationToken = new Entity({
+		model: {
+			entity: "verificationToken",
+			version: "1",
+			service,
+		},
+		attributes: {
+			identifier: {
+				type: "string",
+				readOnly: true,
+			},
+			token: {
+				type: "string",
+				readOnly: true,
+			},
+			expires: {
+				type: "number",
+				readOnly: true,
+			},
+			userId: {
+				type: "string",
+				readOnly: true,
+			},
+		},
+		indexes: {
+			byUserId: {
+				pk: {
+					field: "pk",
+					composite: ["userId"],
+				},
+				sk: {
+					field: "sk",
+					composite: ["expires"],
+				},
+			},
+			byIdentifierAndToken: {
+				index: "GSI1",
+				pk: {
+					field: "GSI1PK",
+					composite: ["identifier"],
+				},
+				sk: {
+					field: "GSI1SK",
+					composite: ["token"],
+				},
+			},
+		}
+	});
+
+	return { user, account, session, verificationToken };
 }
 
-export function ElectroDBAdapter(dynamoDbClient: DynamoDBClient): Adapter {
+export function ElectroDBAdapter(entities: ReturnType<typeof createElectroDbEntities>): Adapter {
 
 	let adapterUser: AdapterUser = {
 		id: "id",
@@ -184,9 +236,27 @@ export function ElectroDBAdapter(dynamoDbClient: DynamoDBClient): Adapter {
 		expires: new Date(),
 	}
 
+	const formatUser = {
+		to(electroUser: AdapterUser): EntityItem<typeof entities.user> {
+			return {
+				...electroUser,
+				emailVerified: electroUser.emailVerified?.toISOString(),
+				image: electroUser.image ?? undefined,
+				name: electroUser.name ?? undefined,
+			}
+		},
+		from(dbUser: EntityItem<typeof entities.user>): AdapterUser {
+			return {
+				...dbUser,
+				emailVerified: dbUser.emailVerified ? new Date(dbUser.emailVerified) : null,
+			}
+		},
+	}
+
 	return {
 		async createUser(user: AdapterUser) {
-			return user;
+			const res = await entities.user.create(formatUser.to(user)).go();
+			return formatUser.from(res.data);
 		},
 		async getUser(id: string) {
 			return null;

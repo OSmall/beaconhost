@@ -1,13 +1,14 @@
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
 import env from "@/lib/env";
-import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
-import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/github";
+import { createElectroDbEntities, ElectroDBAdapter } from "./orm/ElectroDBAdapter";
 
-const dbClient = DynamoDBAdapter(DynamoDBDocument.from(new DynamoDB({})), {
-	tableName: `${env.STAGE}-webapp-authjs`
+export const dynamoDbClient = new DynamoDBClient({
+	endpoint: "http://localhost:8000",
 });
+export const AuthEntities = createElectroDbEntities(dynamoDbClient, `beaconhost-${env.STAGE}`);
+const electroDbAdapter = ElectroDBAdapter(AuthEntities);
 
 export const {
 	handlers: { GET, POST },
@@ -21,7 +22,7 @@ export const {
 			clientSecret: env.GITHUB_SECRET,
 		}),
 	],
-	adapter: dbClient,
+	adapter: electroDbAdapter,
 	trustHost: true,
 	secret: env.AUTH_SECRET,
 });

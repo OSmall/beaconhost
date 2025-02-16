@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const stages = ['dev', 'prod',] as const;
+const stages = ['local', 'dev', 'prod',] as const;
 export type stages = typeof stages[number];
 
 const localEnvSchema = z.object({

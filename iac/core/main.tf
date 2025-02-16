@@ -51,7 +51,7 @@ resource "null_resource" "default" {
 }
 
 resource "aws_dynamodb_table" "authjs" {
-  name         = "${var.environment}-webapp-authjs"
+  name         = "beaconhost-${var.environment}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "pk"
   range_key    = "sk"
