@@ -1,7 +1,9 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { randomUUID } from "crypto";
 import { Entity, EntityItem } from "electrodb";
+import { X } from "lucide-react";
 import { Adapter, AdapterAccount, AdapterSession, AdapterUser } from "next-auth/adapters";
+import { z } from "zod";
 
 const service: string = "beaconhost";
 
@@ -259,15 +261,29 @@ export function ElectroDBAdapter(entities: ReturnType<typeof createElectroDbEnti
 			return formatUser.from(res.data);
 		},
 		async getUser(id: string) {
-			return null;
+			const response = await entities.user.get({ id }).go();
+			const user = response.data;
+			return user ? formatUser.from(user) : null;
 		},
 		async getUserByEmail(email: string) {
-			return null;
+			const response = await entities.user.query.byEmail({ email }).go();
+			const user = response.data[0];
+			return user ? formatUser.from(user) : null;
 		},
-		async getUserByAccount(providerAccountId) {
-			return null;
+		async getUserByAccount({ provider, providerAccountId }) {
+			const accountResponse = await entities.account.query
+				.byProvider({ provider, providerAccountId }).go();
+			const account = accountResponse.data[0];
+			const userResponse = await entities.user.get({ id: account.id }).go();
+			const user = userResponse.data;
+			return user ? formatUser.from(user) : null;
 		},
 		async updateUser(user) {
+			// const response = await entities.user
+			// 	.patch({ id: user.id })
+				// .set(formatUser.to(user))
+				// .go();
+			// return response.data;
 			return adapterUser;
 		},
 		async deleteUser(userId: string) {
