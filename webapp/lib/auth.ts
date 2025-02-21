@@ -2,13 +2,13 @@ import env from "@/lib/env";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
-import { createElectroDbEntities, ElectroDBAdapter } from "./orm/ElectroDBAdapter";
+import { createElectroDbService, ElectroDBAdapter } from "./orm/ElectroDBAdapter";
 
 export const dynamoDbClient = new DynamoDBClient({
-	endpoint: "http://localhost:8000",
+	endpoint: env.STAGE === "local" ? "http://localhost:8000" : undefined,
 });
-export const AuthEntities = createElectroDbEntities(dynamoDbClient, `beaconhost-${env.STAGE}`);
-const electroDbAdapter = ElectroDBAdapter(AuthEntities);
+export const AuthService = createElectroDbService(dynamoDbClient, `beaconhost-${env.STAGE}`);
+const electroDbAdapter = ElectroDBAdapter(AuthService);
 
 export const {
 	handlers: { GET, POST },

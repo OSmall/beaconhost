@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, AuthEntities, signIn, signOut } from "@/lib/auth";
+import { auth, AuthService, signIn, signOut } from "@/lib/auth";
 
 export async function signInAction() {
 	await signIn();
@@ -13,7 +13,7 @@ export async function signOutAction() {
 export async function testORM() {
 	const user = (await auth())?.user;
 	let query;
-	query = await AuthEntities.session.query
+	query = await AuthService.entities.Session.query
 		.byUser({
 			userId: user?.id || "",
 			// sessionToken: "8afef681-605a-430a-a754-7a4c52332e61"
@@ -22,14 +22,14 @@ export async function testORM() {
 
 	console.log(query);
 
-	query = await AuthEntities.user.query
+	query = await AuthService.entities.User.query
 		// .byId({ id: user?.id || "" })
 		.byEmail({ email: user?.email || "" })
 		.go();
 
 	console.log(query);
 
-	query = await AuthEntities.account.query
+	query = await AuthService.entities.Account.query
 		.byUser({
 			userId: user?.id || "",
 			provider: "github",
