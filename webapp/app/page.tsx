@@ -1,11 +1,11 @@
 import { testORM } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
 import React from 'react';
-import { User } from '@/lib/orm/authTable';
+import { AuthService } from '@/lib/auth';
 
 export default async function Page() {
 
-  const query = await User.scan.go({ ignoreOwnership: true });
+  const query = await AuthService.entities.User.scan.go();
 
   return (
     <div className="flex gap-4 items-center">
